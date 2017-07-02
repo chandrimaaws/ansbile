@@ -1,0 +1,27 @@
+--- # EC2_START_STOP
+- hosts: localhost
+  connection: local
+  become: yes
+  gather_facts: yes
+  ignore_errors: True
+
+  tasks:
+
+   - file: path=/etc/ansible/agentapi/log/logansible.json   state=absent
+   - file: path=/etc/ansible/agentapi/log/logansible.json   state=touch
+
+   - name: Start/Stop    
+     ec2:
+      aws_access_key: AKIAJRGYWHAPE2TFG2NQ 
+      aws_secret_key: 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
+      region: us-east-1
+      instance_ids: i-02b00d025c2202f86
+      state: stopped
+     register: ec2
+
+   - name : Debug info
+     debug: var=ec2
+
+   - copy:
+         content: "{{ec2}}"
+         dest: "/etc/ansible/agentapi/log/logansible.json"
